@@ -22,7 +22,7 @@ The BlockAuth project aims to:
 
 ## Diagram
 
-TODO
+![http://res.cloudinary.com/vidsy/image/upload/v1510875557/BlockAuth_Diagram_2_zn6ipd.svg](http://res.cloudinary.com/vidsy/image/upload/v1510875557/BlockAuth_Diagram_2_zn6ipd.svg)
 
 ## Technical
 
