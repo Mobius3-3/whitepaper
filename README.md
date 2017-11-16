@@ -13,7 +13,12 @@
 
 ## Aims
 
-TODO
+The BlockAuth project aims to:
+
+1. Allow businesses to use the NEO blockchain for **passwordless authentication**.
+1. Provide a solution that businesses **outside** of the NEO ecosystem can use **today**.
+1. Bring **awareness** to the NEO ecosystem. 
+1. Improve the security of web application by moving away from **email/password** based authentication.
 
 ## Diagram
 
