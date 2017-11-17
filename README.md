@@ -11,6 +11,14 @@
   Whitepaper explaining <a href="https://github.com/blockauth">BlockAuth</a>.
 </p>
 
+## Contents
+
+- [Aims](#aims)
+- [Diagram](#diagram)
+- [Technical](#technical)
+- [Limitations](#limitations)
+- [Future](#future)
+
 ## Aims
 
 The BlockAuth project aims to:
