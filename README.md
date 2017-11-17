@@ -14,6 +14,7 @@
 ## Contents
 
 - [Aims](#aims)
+- [Demo](#demo)
 - [Diagram](#diagram)
 - [Technical](#technical)
 - [Limitations](#limitations)
@@ -28,13 +29,91 @@ The BlockAuth project aims to:
 1. Bring **awareness** to the NEO ecosystem. 
 1. Improve the security of web application by moving away from **email/password** based authentication.
 
+## Demo
+
+Visit [demo.blockauth.cc](http://demo.blockauth.cc) for a full BlockAuth demo.
+
 ## Diagram
 
 ![http://res.cloudinary.com/vidsy/image/upload/v1510875557/BlockAuth_Diagram_2_zn6ipd.svg](http://res.cloudinary.com/vidsy/image/upload/v1510875557/BlockAuth_Diagram_2_zn6ipd.svg)
 
 ## Technical
 
-TODO
+This section of the whitepaper will expand upon the BlockAuth flow, visualised in the simplified diagram above.
+
+### Setup Server
+
+Each business wishing to use BlockAuth will need to host and maintain their own version of the BlockAuth [server](https://github.com/blockauth/server).
+This allows the JWT tokens for each business to be signed by a unique token.
+
+### Setup Client
+
+Each business will need to use the BlockAuth [client](https://github.com/blockauth/client) (Javascript library) in their web application, within their
+login form.
+
+The BlockAuth [client](https://github.com/blockauth/client) takes care of communicating with the BlockAuth [server](https://github.com/blockauth/server),
+however the business will need to present the data that is returned by the BlockAuth [client](https://github.com/blockauth/client) to the user within their
+web application.
+
+### User Login Attempt
+
+A user will land on the login page within the business' web application. The login form will ask the user for the NEO public address that they wish to login
+with. 
+
+The user's NEO public address is passed to a Javascript function within the BlockAuth [client](https://github.com/blockauth/client) library, which contracts the businesses
+BlockAuth [server](https://github.com/blockauth/server) to create a new login attempt.
+
+The login attempt data returned to the web application contains the following:
+
+- BlockAuth smart contract address.
+- Smart contract parameters.
+- JWT token for checking if the login attempt has been successful.
+- UNIX timestamp for when the login attempt will expire.
+
+The business' web application should render this information to the user, so that they understand how to invoke the BlockAuth smart contract.
+
+## Smart Contract
+
+The user will take the login attempt data, and use it to invoke the BlockAuth smart contract. They pass the two parameters 
+(random [version 4](https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_.28random.29) UUIDs) to the smart contract.
+
+The smart contract verifies that the parameters are both valid UUIDs. It then concatenates the two UUIDs together to form what will be the key
+for the `Storage.Put()` operation.
+
+Storage key structure:
+
+```
+<random_uuid>.<random_uuid>
+```
+```
+ce8c00c2-4fa5-47de-a07e-1061e62955b0.3b19cfed-9731-4bb4-a5ef-f9fe052bb79e
+```
+
+The smart contract will then use the generated storage key to store the transaction hash of the smart contract invocation.
+
+## Check Login Attempt
+
+The business' web application will use the BlockAuth [client](https://github.com/blockauth/client) library to check if the login attempt has been
+successful.
+
+Under-the-hood, the BlockAuth [client](https://github.com/blockauth/client) is sending a request to the business' 
+BlockAuth [server](https://github.com/blockauth/server). The business' BlockAuth [server](https://github.com/blockauth/server) then queries
+the NEO blockchain directly via the `getstorage` RPC method.
+
+The `getstorage` RPC method is using the same parameters as the user to check if there is a valid NEO transaction hash stored at that key within
+the smart contract.
+
+If a valid NEO transaction hash is returned, and the NEO public address of the transaction matches the user's NEO public address, then the 
+BlockAuth [server](https://github.com/blockauth/server) returns a new [JWT](https://en.wikipedia.org/wiki/JSON_Web_Token) token to the business' web application.
+
+## Logged In
+
+After the web application receives the final [JWT](https://en.wikipedia.org/wiki/JSON_Web_Token) token, it can then use that token to identify the user.
+
+Instead of the business' web application storing an email address as the identifier of a user. They instead store the NEO public address of the user.
+
+The NEO public address that the user originally entered into the login form is signed within the JWT token, so the web application can continue to verify
+who the user is whilst they have access to the token.
 
 ## Limitations
 
