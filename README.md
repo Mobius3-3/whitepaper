@@ -66,7 +66,25 @@ fix this limitation.
 
 ## Future
 
-TODO
+BlockAuth will continue to build new innovative products in the future.
+
+### Serverless
+
+Currently a business needs to deploy and maintain a hosted instance of the BlockAuth [server](https://github.com/blockauth/server). This is a
+barrier to entry, relatively expensive and needs constant monitoring.
+
+In the future the BlockAuth [server](https://github.com/blockauth/server) can be moved to run within [AWS Lambda](https://docs.aws.amazon.com/lambda/latest/dg/welcome.html).
+
+The deployment to a lambda function can be automated, and so reduces the barrier to entry for a business wishing to use BlockAuth. Serverless is
+far more cost effective than running a dedicated host. Lambda functions can not "go down", and so removes the worry of monitoring.
+
+## Embeddable Login Form
+
+Businesses currently will have to use the BlockAuth [client](https://github.com/blockauth/client) (Javascript library) to implement a BlockAuth solution.
+
+In the future, a business will instead install a single dependency that will act as an embeddable login form for desktop and mobile.
+
+A great example of this product is the [Auth0 Lock](https://auth0.com/lock).
 
 ---
 
