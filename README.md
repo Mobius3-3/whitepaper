@@ -27,7 +27,7 @@ The BlockAuth project aims to:
 1. Allow businesses to use the NEO blockchain for **passwordless authentication**.
 1. Provide a solution that businesses **outside** of the NEO ecosystem can use **today**.
 1. Bring **awareness** to the NEO ecosystem. 
-1. Improve the security of web application by moving away from **email/password** based authentication.
+1. Improve the security of web applications by moving away from **email/password** based authentication.
 
 ## Demo
 
@@ -39,12 +39,12 @@ Visit [demo.blockauth.cc](http://demo.blockauth.cc) for a full BlockAuth demo.
 
 ## Technical
 
-This section of the whitepaper will expand upon the BlockAuth flow, visualised in the simplified diagram above.
+This section of the whitepaper will going into detail about the BlockAuth flow, which is visualised in the simplified diagram above.
 
 ### Setup Server
 
 Each business wishing to use BlockAuth will need to host and maintain their own version of the BlockAuth [server](https://github.com/blockauth/server).
-This allows the JWT tokens for each business to be signed by a unique token.
+This allows the [JWT](https://en.wikipedia.org/wiki/JSON_Web_Token) tokens for each business to be signed by a unique secret.
 
 ### Setup Client
 
@@ -57,24 +57,24 @@ web application.
 
 ### User Login Attempt
 
-A user will land on the login page within the business' web application. The login form will ask the user for the NEO public address that they wish to login
+A user will land on the login page of the business' web application. The login form will ask the user for the NEO public address that they wish to login
 with. 
 
-The user's NEO public address is passed to a Javascript function within the BlockAuth [client](https://github.com/blockauth/client) library, which contracts the businesses
+The user's NEO public address is passed to a Javascript function within the BlockAuth [client](https://github.com/blockauth/client) library, which contacts the business'
 BlockAuth [server](https://github.com/blockauth/server) to create a new login attempt.
 
-The login attempt data returned to the web application contains the following:
+The login attempt data returned to the web application contains the following information:
 
-- BlockAuth smart contract address.
+- BlockAuth [smart contract](https://github.com/blockauth/smart-contract) address.
 - Smart contract parameters.
-- JWT token for checking if the login attempt has been successful.
+- [JWT](https://en.wikipedia.org/wiki/JSON_Web_Token) token for checking if the login attempt has been successful.
 - UNIX timestamp for when the login attempt will expire.
 
 The business' web application should render this information to the user, so that they understand how to invoke the BlockAuth smart contract.
 
 ## Smart Contract
 
-The user will take the login attempt data, and use it to invoke the BlockAuth smart contract. They pass the two parameters 
+The user will take the login attempt data, and use it to invoke the BlockAuth [smart contract](https://github.com/blockauth/smart-contract). They pass the two parameters 
 (random [version 4](https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_.28random.29) UUIDs) to the smart contract.
 
 The smart contract verifies that the parameters are both valid UUIDs. It then concatenates the two UUIDs together to form what will be the key
@@ -100,7 +100,7 @@ Under-the-hood, the BlockAuth [client](https://github.com/blockauth/client) is s
 BlockAuth [server](https://github.com/blockauth/server). The business' BlockAuth [server](https://github.com/blockauth/server) then queries
 the NEO blockchain directly via the `getstorage` RPC method.
 
-The `getstorage` RPC method is using the same parameters as the user to check if there is a valid NEO transaction hash stored at that key within
+The `getstorage` RPC method is using the same smart contract parameters as the user to check if there is a valid NEO transaction hash stored at that key within
 the smart contract.
 
 If a valid NEO transaction hash is returned, and the NEO public address of the transaction matches the user's NEO public address, then the 
@@ -117,7 +117,7 @@ who the user is whilst they have access to the token.
 
 ## Limitations
 
-Currently the key used within the `Storage.Put()` operation in the [smart-contract](https://github.com/blockauth/smart-contract) is made up of
+Currently the key used within the `Storage.Put()` operation in the [smart contract](https://github.com/blockauth/smart-contract) is made up of
 two randomly generated [version 4](https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_.28random.29) UUIDs.
 
 ```
