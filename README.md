@@ -72,7 +72,7 @@ The login attempt data returned to the web application contains the following in
 
 The business' web application should render this information to the user, so that they understand how to invoke the BlockAuth smart contract.
 
-## Smart Contract
+### Smart Contract
 
 The user will take the login attempt data, and use it to invoke the BlockAuth [smart contract](https://github.com/blockauth/smart-contract). They pass the two parameters 
 (random [version 4](https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_.28random.29) UUIDs) to the smart contract.
@@ -91,7 +91,7 @@ ce8c00c2-4fa5-47de-a07e-1061e62955b0.3b19cfed-9731-4bb4-a5ef-f9fe052bb79e
 
 The smart contract will then use the generated storage key to store the transaction hash of the smart contract invocation.
 
-## Check Login Attempt
+### Check Login Attempt
 
 The business' web application will use the BlockAuth [client](https://github.com/blockauth/client) library to check if the login attempt has been
 successful.
@@ -106,7 +106,7 @@ the smart contract.
 If a valid NEO transaction hash is returned, and the NEO public address of the transaction matches the user's NEO public address, then the 
 BlockAuth [server](https://github.com/blockauth/server) returns a new [JWT](https://en.wikipedia.org/wiki/JSON_Web_Token) token to the business' web application.
 
-## Logged In
+### Logged In
 
 After the web application receives the final [JWT](https://en.wikipedia.org/wiki/JSON_Web_Token) token, it can then use that token to identify the user.
 
@@ -165,7 +165,7 @@ In the future the BlockAuth [server](https://github.com/blockauth/server) can be
 The deployment to a lambda function can be automated, and so reduces the barrier to entry for a business wishing to use BlockAuth. Serverless is
 far more cost effective than running a dedicated host. Lambda functions can not "go down", and so removes the worry of monitoring.
 
-## Embeddable Login Form
+### Embeddable Login Form
 
 Businesses currently will have to use the BlockAuth [client](https://github.com/blockauth/client) (Javascript library) to implement a BlockAuth solution.
 
