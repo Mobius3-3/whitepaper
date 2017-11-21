@@ -25,6 +25,7 @@
 The BlockAuth project aims to:
 
 1. Allow businesses to use the NEO blockchain for **passwordless authentication**.
+1. **Replace** email/password with a NEO address.
 1. Provide a solution that businesses **outside** of the NEO ecosystem can use **today**.
 1. Bring **awareness** to the NEO ecosystem. 
 1. Improve the security of web applications by moving away from **email/password** based authentication.
@@ -44,16 +45,17 @@ This section of the whitepaper will going into detail about the BlockAuth flow, 
 ### Setup Server
 
 Each business wishing to use BlockAuth will need to host and maintain their own version of the BlockAuth [server](https://github.com/blockauth/server).
-This allows the [JWT](https://en.wikipedia.org/wiki/JSON_Web_Token) tokens for each business to be signed by a unique secret.
+
+The server generates login attempts which are unique to the business as all interactions are verified with [JWT](https://en.wikipedia.org/wiki/JSON_Web_Token) tokens.
+Each [JWT](https://en.wikipedia.org/wiki/JSON_Web_Token) token is signed by a secret, which is unique to the business.
 
 ### Setup Client
 
-Each business will need to use the BlockAuth [client](https://github.com/blockauth/client) (Javascript library) in their web application, within their
+Each business will need to use the BlockAuth [client](https://github.com/blockauth/client) (Javascript library) in their web application, within a
 login form.
 
-The BlockAuth [client](https://github.com/blockauth/client) takes care of communicating with the BlockAuth [server](https://github.com/blockauth/server),
-however the business will need to present the data that is returned by the BlockAuth [client](https://github.com/blockauth/client) to the user within their
-web application.
+The client takes care of communicating with the server, however the business will need to present the data that is returned by the client 
+to the user within their web application.
 
 ### User Login Attempt
 
@@ -70,17 +72,18 @@ The login attempt data returned to the web application contains the following in
 - [JWT](https://en.wikipedia.org/wiki/JSON_Web_Token) token for checking if the login attempt has been successful.
 - UNIX timestamp for when the login attempt will expire.
 
-The business' web application should render this information to the user, so that they understand how to invoke the BlockAuth smart contract.
+The business' web application should render this information to the user, so that they understand how to invoke the BlockAuth smart contract and how much time
+they have left.
 
 ### Smart Contract
 
-The user will take the login attempt data, and use it to invoke the BlockAuth [smart contract](https://github.com/blockauth/smart-contract). They pass the two parameters 
-(random [version 4](https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_.28random.29) UUIDs) to the smart contract.
+The user will take the login attempt information, and use it to invoke the BlockAuth [smart contract](https://github.com/blockauth/smart-contract). 
+
+The BlockAuth [smart contract](https://github.com/blockauth/smart-contract) takes two parameters, which are random 
+[version 4](https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_.28random.29) UUIDs.
 
 The smart contract verifies that the parameters are both valid UUIDs. It then concatenates the two UUIDs together to form what will be the key
-for the `Storage.Put()` operation.
-
-Storage key structure:
+for the `Storage.Put()` operation. The storage key structure is:
 
 ```
 <random_uuid>.<random_uuid>
@@ -89,26 +92,37 @@ Storage key structure:
 ce8c00c2-4fa5-47de-a07e-1061e62955b0.3b19cfed-9731-4bb4-a5ef-f9fe052bb79e
 ```
 
-The smart contract will then use the generated storage key to store the transaction hash of the smart contract invocation.
+The smart contract will then use the generated storage key to store the transaction hash of the current smart contract invocation.
 
 ### Check Login Attempt
 
-The business' web application will use the BlockAuth [client](https://github.com/blockauth/client) library to check if the login attempt has been
+The business' web application will then use the BlockAuth [client](https://github.com/blockauth/client) library to check if the login attempt has been
 successful.
 
-Under-the-hood, the BlockAuth [client](https://github.com/blockauth/client) is sending a request to the business' 
-BlockAuth [server](https://github.com/blockauth/server). The business' BlockAuth [server](https://github.com/blockauth/server) then queries
-the NEO blockchain directly via the `getstorage` RPC method.
+The [JWT](https://en.wikipedia.org/wiki/JSON_Web_Token) token returned when the login attempt was created is handed to the business' BlockAuth 
+[server](https://github.com/blockauth/server) when checking if the login attempt was successful.
 
-The `getstorage` RPC method is using the same smart contract parameters as the user to check if there is a valid NEO transaction hash stored at that key within
+The [JWT](https://en.wikipedia.org/wiki/JSON_Web_Token) token holds the following information:
+
+- User's public NEO address.
+- Smart contract parameters.
+
+The business' BlockAuth [server](https://github.com/blockauth/server) uses the smart contract parameters within the [JWT](https://en.wikipedia.org/wiki/JSON_Web_Token) token
+to generate the same storage key.
+
+The business' BlockAuth [server](https://github.com/blockauth/server) then uses the [NEO Go SDK](https://github.com/CityOfZion/neo-go-sdk) to query the NEO
+blockchain directy, using the `getstorage` RPC method.
+
+The `getstorage` RPC method is using the same storage key as the smart contract to check if there is a valid NEO transaction hash stored at that key within
 the smart contract.
 
-If a valid NEO transaction hash is returned, and the NEO public address of the transaction matches the user's NEO public address, then the 
-BlockAuth [server](https://github.com/blockauth/server) returns a new [JWT](https://en.wikipedia.org/wiki/JSON_Web_Token) token to the business' web application.
+If a valid NEO transaction hash is returned, and the NEO public address of the transaction matches the user's NEO public address, then the login attempt has been
+successful. Thus, the business' BlockAuth [server](https://github.com/blockauth/server) returns a new [JWT](https://en.wikipedia.org/wiki/JSON_Web_Token) token 
+to the business' web application.
 
 ### Logged In
 
-After the web application receives the final [JWT](https://en.wikipedia.org/wiki/JSON_Web_Token) token, it can then use that token to identify the user.
+After the business' web application receives the final [JWT](https://en.wikipedia.org/wiki/JSON_Web_Token) token, it can then use that token to identify the user.
 
 Instead of the business' web application storing an email address as the identifier of a user. They instead store the NEO public address of the user.
 
@@ -164,6 +178,13 @@ In the future the BlockAuth [server](https://github.com/blockauth/server) can be
 
 The deployment to a lambda function can be automated, and so reduces the barrier to entry for a business wishing to use BlockAuth. Serverless is
 far more cost effective than running a dedicated host. Lambda functions can not "go down", and so removes the worry of monitoring.
+
+### Transaction Based
+
+The current user experience for invoking a NEO smart contract is quite limited, which introduces a barrier to entry for users interacting with BlockAuth.
+
+Thus a future BlockAuth development could be authentication via a simple GAS transaction, instead of invoking the BlockAuth [smart contract](https://github.com/blockauth/smart-contract).
+The GAS amount sent by the user would act as a one-time security code, and would be returned to the user after login had occured.
 
 ### Embeddable Login Form
 
