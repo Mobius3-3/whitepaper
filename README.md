@@ -33,7 +33,7 @@ The NeoAuth project aims to:
 
 ## Demo
 
-Visit [demo.neoauth.org](https://demo.neoauth.org) for a full NeoAuth demo.
+Visit [demo.neoauth.org](http://demo.neoauth.org) for a full NeoAuth demo.
 
 ## Diagram
 
@@ -198,7 +198,7 @@ A great example of this product is the [Auth0 Lock](https://auth0.com/lock).
 ---
 
 <p align="center">
-  Check out the NeoAuth <a href="https://demo.neoauth.org/">Demo</a>.
+  Check out the NeoAuth <a href="http://demo.neoauth.org/">Demo</a>.
   <br>
   🔐
 </p>
