@@ -1,9 +1,5 @@
 <p align="center">
-  <img 
-    src="http://res.cloudinary.com/vidsy/image/upload/v1512688296/ba-black-green_e3sqlz.svg" 
-    width="100px"
-    style="padding: 20px 0;"
-  >
+  <img src="https://raw.githubusercontent.com/neoauth/design-assets/master/logo/colour/neoauth_color.png" width="150px" /> 
 </p>
 
 <h1 align="center">NeoAuth Whitepaper</h1>
