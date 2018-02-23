@@ -8,6 +8,12 @@
   Whitepaper explaining <a href="https://neoauth.org">NeoAuth</a>.
 </p>
 
+<p align="center">
+  <a href="https://github.com/neoauth/whitepaper/releases">
+    <img src="https://img.shields.io/github/release/neoauth/whitepaper.svg?style=flat">
+  </a>
+</p>
+
 ## Contents
 
 - [Aims](#aims)
