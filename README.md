@@ -200,7 +200,5 @@ A great example of this product is the [Auth0 Lock](https://auth0.com/lock).
 ---
 
 <p align="center">
-  Check out the NeoAuth <a href="http://demo.neoauth.org/">Demo</a>.
-  <br>
-  🔐
+  © 2018 <a href="https://neoauth.org">NeoAuth</a>
 </p>
