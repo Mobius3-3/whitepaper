@@ -29,9 +29,9 @@ The NeoAuth project aims to:
 
 1. Allow businesses to use the NEO blockchain for **passwordless authentication**.
 1. **Replace** email/password with a NEO address.
-1. Provide a solution that businesses **outside** of the NEO ecosystem can use **today**.
 1. Bring **awareness** to the NEO ecosystem. 
 1. Improve the security of web applications by moving away from **email/password** based authentication.
+1. Allow other NEO projects to **piggyback** NeoAuth with their own data, e.g. digital identity. 
 
 ## Demo
 
